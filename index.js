@@ -28,29 +28,33 @@ function startroulette() {
 
     document.getElementById('start').classList.add('is-loading')
 
-    req = new XMLHttpRequest();
-    req.open("GET", api + query + addons, false);
-    req.send(null);
+    setTimeout(() => { // Because js is weird
+        req = new XMLHttpRequest();
+        req.open("GET", api + query + addons, false);
+        req.send(null);
+        
+        levels = JSON.parse(req.responseText)[0]["results"]
+
+
+        for (i = 1; i <= levels; i++) {
+            list.push(i)
+        }
+        list.shuffle()
+
+        list = list.slice(0,100)
+
+        apiquery = api + query;
+
+        document.getElementById('settings').classList.add('animate__fadeOut')
+        setTimeout(() => {
+            document.getElementById('settings').classList.add('is-hidden')
+            document.getElementById('settings').classList.remove('is-loading')
+
+            getNextLvl()
+        }, 250)
+    })
+
     
-    levels = JSON.parse(req.responseText)[0]["results"]
-
-
-    for (i = 1; i <= levels; i++) {
-        list.push(i)
-    }
-    list.shuffle()
-
-    list = list.slice(0,100)
-
-    apiquery = api + query;
-
-    document.getElementById('settings').classList.add('animate__fadeOut')
-    setTimeout(() => {
-        document.getElementById('settings').classList.add('is-hidden')
-        document.getElementById('settings').classList.remove('is-loading')
-
-        getNextLvl()
-    }, 250)
 }
 
 function getNextLvl() {
@@ -68,28 +72,80 @@ function getNextLvl() {
     
     level = JSON.parse(req.responseText)[(leveln-1)%10]
     console.log(level)
-
-    document.getElementById('levels').insertAdjacentHTML('beforeend', 
-    `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
-        <div class="column box-content">
-            <h1 class="title">#${listnum}: ${level.name}</h1>
-            <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
-        </div>
-        <div class="is-narrow column" id="temp">
-            <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
-            <div class="columns mt-1">
-                <div class="column has-text-left">
-                    <div class="button is-success" onclick="complete()" id="completion">Complete</div>
-                </div>
-                <div class="column has-text-right">
-                    <div class="button is-danger" onclick="finish()">Give Up</div>
+    
+    if (level != undefined) { // If the servers goof up
+        document.getElementById('levels').insertAdjacentHTML('beforeend', 
+        `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+            <div class="column box-content">
+                <h1 class="title">#${listnum}: ${level.name}</h1>
+                <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
+            </div>
+            <div class="is-narrow column" id="temp">
+                <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
+                <div class="columns mt-1">
+                    <div class="column has-text-left">
+                        <div class="button is-success" onclick="complete()" id="completion">Complete</div>
+                    </div>
+                    <div class="column has-text-right">
+                        <div class="button is-danger" onclick="finish()">Give Up</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>`)
-
-    copy(level.id)
+        </div>`)
+        copy(level.id)
+    } else {
+        getNextLvl()
+    }
 }
+
+function showFinalLevels() {
+    let element = document.getElementById('show-remaining')
+    element.removeAttribute('onclick')
+    element.classList.add('is-loading')
+    
+    str = ''
+    pages = {}
+
+    setTimeout(() => { // Idk why but it doesn't set the loading thing correctly unless I do this.
+        for (leveln of list) {
+            listnum++;
+            nextpercent++;
+            
+            if (nextpercent > 100) {
+                break
+            }
+    
+            page = Math.ceil(leveln/10)
+    
+            if (!pages.hasOwnProperty(page)) {
+                req = new XMLHttpRequest();
+                req.open("GET", apiquery + '&page=' + page, false);
+                req.send(null);
+    
+                pages[page] = JSON.parse(req.responseText)
+            }
+    
+            level = pages[page][(leveln-1)%10]
+            console.log(leveln)
+            
+            if (level != undefined) { // If the servers goof up
+                str += `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+                    <div class="column box-content">
+                        <h1 class="title">#${listnum}: ${level.name}</h1>
+                        <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
+                    </div>
+                    <div class="is-narrow column has-text-grey-light">
+                        ${nextpercent}%
+                    </div>
+                </div>`
+            }
+        }
+
+        document.getElementById('levels').insertAdjacentHTML('beforeend', str)
+        document.getElementById('rm').classList.add('is-hidden')
+    })
+}
+
 
 function complete() {
     percent = parseInt(document.getElementById('percent').value)
@@ -120,8 +176,14 @@ function finish() {
 
     diffstr = diffstr + 's'
 
+    let buttonorno = ''
+
+    if (nextpercent < 100) {
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels (this may take a while)</div></span>`
+    }
+
     if (old) {
-        old.innerHTML = 'Given up'
+        old.innerHTML = `Given up (${nextpercent}%)`
     }
     document.getElementById('levels').insertAdjacentHTML('beforeend', 
     `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
@@ -132,6 +194,7 @@ function finish() {
             <div class="content">
                 Number of levels: ${listnum - 1}<br>
                 Highest percent: ${nextpercent - 1}%
+                ${buttonorno}
             </div>
         </div>
     </div>`)
@@ -145,7 +208,7 @@ function copy(string) {
     document.execCommand("copy");
 }
 
-// https://stackoverflow.com/a/6274381/9124836 (thanks matcool)
+// https://stackoverflow.com/a/6274381/9124836
 Object.defineProperty(Array.prototype, 'shuffle', {
     value: function () {
         for (let i = this.length - 1; i > 0; i--) {
@@ -155,3 +218,4 @@ Object.defineProperty(Array.prototype, 'shuffle', {
         return this;
     }
 });
+
