@@ -115,7 +115,7 @@ function finish() {
         old.innerHTML = 'Given up'
     }
     document.getElementById('levels').insertAdjacentHTML('beforeend', 
-    `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1'>
+    `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
         <div class='column'>
             <h1 class="title">
                 Results
