@@ -55,12 +55,13 @@ function getNextLvl() {
     listnum++;
 
     leveln = list.slice(0, 1)[0]
+    console.log(leveln)
     list = list.slice(1)
 
     page = Math.ceil(leveln/10)
 
     req = new XMLHttpRequest();
-    req.open("GET", apiquery + '&?page=' + page, false);
+    req.open("GET", apiquery + '&page=' + page, false);
     req.send(null);
     
     level = JSON.parse(req.responseText)[(leveln-1)%10]
@@ -76,7 +77,7 @@ function getNextLvl() {
             <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
             <div class="columns mt-1">
                 <div class="column has-text-left">
-                    <div class="button is-success" onclick="complete()">Complete</div>
+                    <div class="button is-success" onclick="complete()" id="completion">Complete</div>
                 </div>
                 <div class="column has-text-right">
                     <div class="button is-danger" onclick="finish()">Give Up</div>
