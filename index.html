@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDRoulette</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">
+</head>
+<body>
+    <input type="text" id="copypaste" style="position: absolute; opacity: 0;">
+    <div id="help" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.25s">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="media">
+                    <div class="media-content">Geometry Dash Roulette is a minigame in which you choose a level difficulty and then get the rated levels from that difficulty in a random order. Each time you play a level you must get a higher percent than the previous level, starting at 1% on the first level. The game ends when you either get 100% on a level or you give up. The game was originally made for only extreme demons, the website most commonly used from which I found great inspiration from can be found <a href="https://matcool.github.io/extreme-demon-roulette/">here</a>. The concept is based off of <a href="https://www.youtube.com/watch?v=nv_9FkfGRsc">this video</a> by npesta. Hope you enjoy!</div>
+                    <div class="media-right has-text-right"><div id="btn-close-help" class="button is-danger" onclick="document.getElementById('help').classList.remove('is-active')">X</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="columns is-centered is-vcentered mt-1">
+        <div class="column is-narrow has-text-left">
+            <div id="btn-help" class="button is-info" onclick="document.getElementById('help').classList.add('is-active')">Help</div>
+        </div>
+        <div class="column is-half has-text-centered"><h1 class="title">Geometry Dash Roulette</h1></div>
+        <div class="column is-narrow has-text-left">Coded by FigmentBoy</div>
+    </div>
+
+    <div class="container animate__animated" id="settings" style="--animate-duration: 0.25s">
+        <div class="box columns">
+            <div class="column">
+                <h2 class="title">Difficulty</h2>
+                <div>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=1"> Easy</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=2"> Normal</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=3"> Hard</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=4"> Harder</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=5"> Insane</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=1"> Easy Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=2"> Medium Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=3"> Hard Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=4"> Insane Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=5"> Extreme Demon</label>
+                </div>
+                <br>
+                <div id="start" class="button is-success" onclick="startroulette()">Start</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="levels" class="container is-centered">
+        
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
