@@ -70,7 +70,7 @@ function getNextLvl() {
     `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
         <div class="column box-content">
             <h1 class="title">#${listnum}: ${level.name}</h1>
-            <h1 class="subtitle">By ${level.author} (${level.id})</h1>
+            <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
         </div>
         <div class="is-narrow column" id="temp">
             <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
