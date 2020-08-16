@@ -3,6 +3,7 @@ let apiquery = ''
 let list = []
 let listnum = 0
 let nextpercent = 1
+let diffstr = ""
 
 function startroulette() {
     const radios = document.getElementsByName('difficulty');
@@ -13,6 +14,7 @@ function startroulette() {
         if (radios[i].checked) {
             // do whatever you want with the checked radio
             query+=radios[i].value;
+            diffstr = radios[i].parentNode.innerText
 
             // only one radio can be logically checked, don't check the rest
             break;
@@ -112,6 +114,12 @@ function complete() {
 
 function finish() {
     old = document.getElementById('temp')
+    if (!diffstr.includes('Demon')) {
+        diffstr = diffstr + ' Level'
+    }
+
+    diffstr = diffstr + 's'
+
     if (old) {
         old.innerHTML = 'Given up'
     }
@@ -119,7 +127,7 @@ function finish() {
     `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
         <div class='column'>
             <h1 class="title">
-                Results
+                Results -${diffstr}
             </h1>
             <div class="content">
                 Number of levels: ${listnum - 1}<br>
