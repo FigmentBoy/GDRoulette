@@ -82,7 +82,7 @@ function getNextLvl() {
             </div>
             <div class="is-narrow column" id="temp">
                 <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
-                <div class="columns mt-1">
+                <div class="columns is-mobile mt-1">
                     <div class="column has-text-left">
                         <div class="button is-success" onclick="complete()" id="completion">Complete</div>
                     </div>
