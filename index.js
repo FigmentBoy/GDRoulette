@@ -112,6 +112,12 @@ function startcustom() {
 
             creatortxt = JSON.parse(req.responseText)['accountID']
 
+            if (!creatortxt) {
+                alert('Creator does not exist')
+                document.getElementById('startcustom').classList.remove('is-loading')
+                return
+            }
+
             apiquery = api + '*?creators=' + creatortxt
 
             levels = 0
@@ -119,8 +125,11 @@ function startcustom() {
             page = 0
             while (amount == 10) {
                 req = getPage(page)
+                console.log(req)
 
+                
                 amount = req.length
+                
                 levels += amount
                 page++
 
@@ -215,6 +224,9 @@ function getNextLvlCustom() {
 }
 
 function getNextLvl() {
+    if (list.length == 0) {
+        return
+    }
     leveln = list.slice(0, 1)[0]
     console.log(leveln)
     list = list.slice(1)
@@ -422,6 +434,9 @@ function getPage(page) {
         req.send(null);
 
         pages[`page-${page}`] = JSON.parse(req.responseText)
+        if (pages[`page-${page}`] == -1) {
+            pages[`page-${page}`] = [];
+        }
     }
 
     return (pages[`page-${page}`])
