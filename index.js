@@ -27,7 +27,7 @@ function startroulette() {
         return
     }
 
-    if (query = '*custom') {
+    if (query == '*custom') {
         custom = true;
         document.getElementById('settings').classList.add('animate__fadeOut')
         setTimeout(() => {
@@ -35,9 +35,10 @@ function startroulette() {
             document.getElementById('settings').classList.remove('is-loading')
 
             document.getElementById('levels').insertAdjacentHTML('beforeend', 
-            `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+            `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1' id='custombox'>
                 <div class="column box-content">
-                    <textarea id='customs' class='textarea'></textarea>
+                    <textarea id='customs' class='textarea' placeholder='Enter your custom levels here, seperated by line'></textarea>
+                    <br>
                     <div id="startcustom" class="button is-success" onclick="startcustom()">Start</div>
                 </div>
                 
@@ -71,6 +72,69 @@ function startroulette() {
                 getNextLvl()
             }, 250)
         })
+    }
+}
+
+function startcustom() {
+    document.getElementById('startcustom').classList.add('is-loading')
+
+    listtxt = document.getElementById('customs').value
+
+    list = listtxt.split('\n')
+    
+    for (i = 0; i < list.length; i++) {
+        list[i] = list[i].split(' ').join()
+    }
+
+    list.shuffle()
+    list = list.slice(0, 100)
+
+    document.getElementById('custombox').classList.add('animate__fadeOut')
+    setTimeout(() => {
+        document.getElementById('custombox').classList.add('is-hidden')
+        document.getElementById('custombox').classList.remove('is-loading')
+
+        getNextLvlCustom()
+    }, 250)
+
+}
+
+function getNextLvlCustom() {
+    listnum++;
+
+    leveln = list.slice(0, 1)[0]
+    console.log(leveln)
+    list = list.slice(1)
+
+    req = new XMLHttpRequest();
+    req.open("GET", 'https://www.gdbrowser.com/api/level/' + leveln, false);
+    req.send(null);
+    
+    level = JSON.parse(req.responseText)
+    console.log(level)
+    
+    if (level != undefined) { // If the servers goof up
+        document.getElementById('levels').insertAdjacentHTML('beforeend', 
+        `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+            <div class="column box-content">
+                <h1 class="title">#${listnum}: ${level.name}</h1>
+                <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
+            </div>
+            <div class="is-narrow column" id="temp">
+                <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
+                <div class="columns is-mobile mt-1">
+                    <div class="column has-text-left">
+                        <div class="button is-success" onclick="complete()" id="completion">Complete</div>
+                    </div>
+                    <div class="column has-text-right">
+                        <div class="button is-danger" onclick="finish()">Give Up</div>
+                    </div>
+                </div>
+            </div>
+        </div>`)
+        copy(level.id)
+    } else {
+        getNextLvlCustom()
     }
 }
 
@@ -163,18 +227,65 @@ function showFinalLevels() {
     })
 }
 
+function showFinalLevelsCustom() {
+    let element = document.getElementById('show-remaining')
+    element.removeAttribute('onclick')
+    element.classList.add('is-loading')
+    
+    str = ''
+    pages = {}
+
+    setTimeout(() => { // Idk why but it doesn't set the loading thing correctly unless I do this.
+        for (leveln of list) {
+            listnum++;
+            nextpercent++;
+            
+            if (nextpercent > 100) {
+                break
+            }
+    
+            req = new XMLHttpRequest();
+            req.open("GET", 'https://www.gdbrowser.com/api/level/' + leveln, false);
+            req.send(null);
+            
+            level = JSON.parse(req.responseText)
+
+            if (level != undefined) { // If the servers goof up
+                str += `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+                    <div class="column box-content">
+                        <h1 class="title">#${listnum}: ${level.name}</h1>
+                        <h1 class="subtitle"><i>By ${level.author} (${level.id})</i></h1>
+                    </div>
+                    <div class="is-narrow column has-text-grey-light">
+                        ${nextpercent}%
+                    </div>
+                </div>`
+            }
+        }
+
+        document.getElementById('levels').insertAdjacentHTML('beforeend', str)
+        document.getElementById('rm').classList.add('is-hidden')
+    })
+}
+
 
 function complete() {
     percent = parseInt(document.getElementById('percent').value)
-    if (percent >= nextpercent && percent < 100) {
+    if (percent >= nextpercent && percent < 100 && list.length > 0) {
         nextpercent = percent + 1
 
         old = document.getElementById('temp')
         old.id = ''
         old.innerHTML = `${percent}%`
-        getNextLvl()
-    } else if (percent == 100) {
-        nextpercent = 101
+
+        if (custom) {
+            getNextLvlCustom()
+        } else {
+            getNextLvl()
+        }
+        
+    } else if (percent == 100 || list.length == 0) {
+        nextpercent = percent + 1
         listnum++;
         old = document.getElementById('temp')
         old.id = ''
@@ -195,7 +306,9 @@ function finish() {
 
     let buttonorno = ''
 
-    if (nextpercent < 100) {
+    if (nextpercent < 100 && list.length > 0 && custom) {
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsCustom()' id='show-remaining'>Show Remaining Levels (this may take a while)</div></span>`
+    } else if (nextpercent < 100 && list.length > 0) {
         buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels (this may take a while)</div></span>`
     }
 
@@ -209,7 +322,7 @@ function finish() {
                 Results -${diffstr}
             </h1>
             <div class="content">
-                Number of levels: ${listnum - 1}<br>
+                Number of levels: ${listnum - 1}/${listnum + list.length}<br>
                 Highest percent: ${nextpercent - 1}%
                 ${buttonorno}
             </div>
