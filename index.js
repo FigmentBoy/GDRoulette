@@ -4,6 +4,7 @@ let list = []
 let listnum = 0
 let nextpercent = 1
 let diffstr = ""
+let custom = false
 
 function startroulette() {
     const radios = document.getElementsByName('difficulty');
@@ -26,35 +27,51 @@ function startroulette() {
         return
     }
 
-    document.getElementById('start').classList.add('is-loading')
-
-    setTimeout(() => { // Because js is weird
-        req = new XMLHttpRequest();
-        req.open("GET", api + query + addons, false);
-        req.send(null);
-        
-        levels = JSON.parse(req.responseText)[0]["results"]
-
-
-        for (i = 1; i <= levels; i++) {
-            list.push(i)
-        }
-        list.shuffle()
-
-        list = list.slice(0,100)
-
-        apiquery = api + query;
-
+    if (query = '*custom') {
+        custom = true;
         document.getElementById('settings').classList.add('animate__fadeOut')
         setTimeout(() => {
             document.getElementById('settings').classList.add('is-hidden')
             document.getElementById('settings').classList.remove('is-loading')
 
-            getNextLvl()
+            document.getElementById('levels').insertAdjacentHTML('beforeend', 
+            `<div class='box is-centered columns animate__animated animate__fadeInUpBig mt-1'>
+                <div class="column box-content">
+                    <textarea id='customs' class='textarea'></textarea>
+                    <div id="startcustom" class="button is-success" onclick="startcustom()">Start</div>
+                </div>
+                
+            </div>`)
         }, 250)
-    })
+    } else {
+        document.getElementById('start').classList.add('is-loading')
 
-    
+        setTimeout(() => { // Because js is weird
+            req = new XMLHttpRequest();
+            req.open("GET", api + query + addons, false);
+            req.send(null);
+            
+            levels = JSON.parse(req.responseText)[0]["results"]
+
+
+            for (i = 1; i <= levels; i++) {
+                list.push(i)
+            }
+            list.shuffle()
+
+            list = list.slice(0,100)
+
+            apiquery = api + query;
+
+            document.getElementById('settings').classList.add('animate__fadeOut')
+            setTimeout(() => {
+                document.getElementById('settings').classList.add('is-hidden')
+                document.getElementById('settings').classList.remove('is-loading')
+
+                getNextLvl()
+            }, 250)
+        })
+    }
 }
 
 function getNextLvl() {
