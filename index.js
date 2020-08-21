@@ -395,9 +395,9 @@ function finish() {
     let buttonorno = ''
 
     if (nextpercent < 100 && list.length > 0 && custom) {
-        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsCustom()' id='show-remaining'>Show Remaining Levels (this may take a while)</div></span>`
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsCustom()' id='show-remaining'>Show Remaining Levels</div></span>`
     } else if (nextpercent < 100 && list.length > 0) {
-        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels (this may take a while)</div></span>`
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels</div></span>`
     }
 
     if (old) {
