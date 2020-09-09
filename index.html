@@ -12,6 +12,19 @@
 <body>
     <input type="text" id="copypaste" style="position: absolute; opacity: 0;">
 
+    <div id="oop" class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="media">
+                    <div class="media-content">This website is temporarily down due to the outage of GDBrowser. We apologize for any inconvenience!
+                      
+                    </div>
+                    <div class="media-right has-text-right"><div id="btn-close-help" class="button is-danger" onclick="document.getElementById('oop').classList.remove('is-active')">X</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="help" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.25s">
         <div class="modal-background"></div>
