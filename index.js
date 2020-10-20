@@ -364,6 +364,7 @@ function complete() {
 
         if (percent < nextpercent || percent > 100 || document.getElementById('percent').value == '') {
             alert('Nice try lmao')
+            document.getElementById('completion').classList.remove('is-loading')
         } else if (percent >= nextpercent && percent < 100 && list.length > 0) {
             nextpercent = percent + 1
 
