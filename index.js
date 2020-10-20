@@ -9,6 +9,8 @@ let creator = false
 
 let pages = {}
 
+Math.seed = Math.floor(Math.random()*10000000000);
+
 function startroulette() {
     const radios = document.getElementsByName('difficulty');
     let query = '*';
@@ -80,11 +82,13 @@ function startroulette() {
             for (i = 1; i <= levels; i++) {
                 list.push(i)
             }
+
+            if (document.querySelector('#seed').value != '') {
+                Math.seed = document.querySelector('#seed').value;
+            }
             list.shuffle()
 
             list = list.slice(0,100)
-
-            
 
             getNextLvl()
 
@@ -92,8 +96,6 @@ function startroulette() {
             setTimeout(() => {
                 document.getElementById('settings').classList.add('is-hidden')
                 document.getElementById('settings').classList.remove('is-loading')
-
-                
             }, 250)
         })
     }
@@ -140,11 +142,11 @@ function startcustom() {
                 list.push(i)
             }
 
-            
+            if (document.querySelector('#seed').value != '') {
+                Math.seed = document.querySelector('#seed').value;
+            }
+
             list.shuffle()
-
-            
-
             getNextLvl()
 
             document.getElementById('custombox').classList.add('animate__fadeOut')
@@ -164,6 +166,10 @@ function startcustom() {
         
         for (i = 0; i < list.length; i++) {
             list[i] = list[i].split(' ').join()
+        }
+
+        if (document.querySelector('#seed').value != '') {
+            Math.seed = document.querySelector('#seed').value;
         }
 
         list.shuffle()
@@ -442,11 +448,21 @@ function getPage(page) {
     return (pages[`page-${page}`])
 }
 
+Math.seededRandom = function(max, min) {
+    max = max || 1;
+    min = min || 0;
+ 
+    Math.seed = (Math.seed * 9301 + 49297) % 233280;
+    var rnd = Math.seed / 233280;
+ 
+    return min + rnd * (max - min);
+}
+
 // https://stackoverflow.com/a/6274381/9124836
 Object.defineProperty(Array.prototype, 'shuffle', {
     value: function () {
         for (let i = this.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = Math.floor(Math.seededRandom() * (i + 1));
             [this[i], this[j]] = [this[j], this[i]];
         }
         return this;

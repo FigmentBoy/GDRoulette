@@ -56,8 +56,8 @@
     <div class="container animate__animated" id="settings" style="--animate-duration: 0.25s">
         <div class="box columns">
             <div class="column">
-                <h2 class="title">Gamemode</h2>
-                <div>
+                <h2 class="title mb-1">Gamemode</h2>
+                <div class="mb-3">
                     <label class="radio"><input type="radio" name="difficulty" value="?diff=1&starred"> Easy</label>
                     <label class="radio"><input type="radio" name="difficulty" value="?diff=2&starred"> Normal</label>
                     <label class="radio"><input type="radio" name="difficulty" value="?diff=3&starred"> Hard</label>
@@ -71,6 +71,11 @@
                     <label class="radio"><input type="radio" name="difficulty" value="?diff=-2"> Any Demon</label>
                     <label class="radio"><input type="radio" name="difficulty" value="custom"> Custom List</label>
                     <label class="radio"><input type="radio" name="difficulty" value="creator"> Creator</label>
+                </div>
+
+                <h3 class="title mb-1">Options</h3>
+                <div class="mb-3">
+                    <input class="input" type="number" name="" id="seed" placeholder="Seed (Leave blank for no seed)">
                 </div>
                 <br>
                 <div id="start" class="button is-success" onclick="startroulette()">Start</div>
