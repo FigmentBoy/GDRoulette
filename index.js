@@ -362,7 +362,7 @@ function complete() {
         percent = parseInt(document.getElementById('percent').value)
         console.log(percent >= nextpercent && percent < 100 && list.length > 0)
 
-        if (percent < nextpercent || percent > 100) {
+        if (percent < nextpercent || percent > 100 || document.getElementById('percent').value == '') {
             alert('Nice try lmao')
         } else if (percent >= nextpercent && percent < 100 && list.length > 0) {
             nextpercent = percent + 1
