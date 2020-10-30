@@ -75,13 +75,13 @@ document.getElementById('addSeed').addEventListener('change', () => {
 
 function updateURL() {
     urlAdds = []
-    if (urlQuery != undefined) urlAdds.push(urlQuery)
+    if (urlQuery != "") urlAdds.push(urlQuery)
     if (document.getElementById('addSeed').checked == true) urlAdds.push('seed='+Math.seed)
     if (document.getElementById('linkStart').checked == true) urlAdds.push('start')
 
-    let string = ''
-    if (urlAdds[0] != "") {
-        urlAdds[0] = '?' +  urlAdds[0]
+    string = ''
+    if (urlAdds.length != 0) {
+        urlAdds[0] = '?' + urlAdds[0]
         string +=  urlAdds.join('&')
     }
     document.getElementById('link').value = window.location.href.split('?')[0] + string
