@@ -535,7 +535,6 @@ function complete() {
         console.log(percent >= nextpercent && percent < 100 && list.length > 0)
 
         if (percent < nextpercent || percent > 100 || document.getElementById('percent').value == '') {
-            alert('Nice try lmao')
             document.getElementById('completion').classList.remove('is-loading')
         } else if (percent >= nextpercent && percent < 100 && list.length > 0) {
             nextpercent = percent + 1
@@ -568,8 +567,8 @@ function completeAPI() {
         percent = parseInt(document.getElementById('percent').value)
         console.log(percent >= nextpercent && percent < 100 && apilist.length > 0)
 
-        if (percent < nextpercent || percent > 100) {
-            alert('Nice try lmao')
+        if (percent < nextpercent || percent > 100 || document.getElementById('percent').value == '') {
+            document.getElementById('completion').classList.remove('is-loading')
         } else if (percent >= nextpercent && percent < 100 && apilist.length > 0) {
             nextpercent = percent + 1
 
