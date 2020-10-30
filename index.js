@@ -39,6 +39,7 @@ for (var i = 0, length = radios.length; i < length; i++) {
 if (urlParams.get('seed') !== null) {
     if (parseInt(urlParams.get('seed'))) {
         document.querySelector('#seed').value = parseInt(urlParams.get('seed'));
+        document.querySelector('#addSeed').checked = true;
         Math.seed = document.querySelector('#seed').value;
     }
 } else {
@@ -50,7 +51,9 @@ if (checked && urlParams.get('start') !== null) {
     document.getElementById('linkStart').checked = true;
     document.getElementById('settings').classList.add('is-hidden')
     startroulette()
-} 
+} else if (urlParams.get('start') !== null) {
+    document.getElementById('linkStart').checked = true;
+}
 updateURL()
 
 if (!checked) {
