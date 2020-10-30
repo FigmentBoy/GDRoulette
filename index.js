@@ -12,7 +12,7 @@ let API = false;
 let pages = {}
 let apilist = []
 
-items = ["Now with pointercrate!", "Now with Challenges!", "Automatically copying IDs since 2020", "Also try Geometry Dash", "Hi Matcool", "F in chat", "Hi YT", "🅱️", "This text is random", "GG EZ"]
+items = ["Hyperdash will come before 2.2", "2.2 when?", "Now with pointercrate!", "Now with Challenges!", "Automatically copying IDs since 2020", "Also try Geometry Dash", "Hi Matcool", "F in chat", "Hi YT", "🅱️", "This text is random", "GG EZ"]
 document.getElementById('splash').innerText = items[Math.floor(Math.random() * items.length)];
 
 Math.seed = Math.floor(Math.random()*10000000000);
