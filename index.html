@@ -57,26 +57,29 @@
             <div class="column">
                 <h2 class="title mb-1">Gamemode</h2>
                 <div class="mb-3">
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=1&starred"> Easy</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=2&starred"> Normal</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=3&starred"> Hard</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=4&starred"> Harder</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=5&starred"> Insane</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=1"> Easy Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=2"> Medium Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=3"> Hard Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=4"> Insane Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=5"> Extreme Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2"> Any Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="demonlist"> List Demon</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="challenge"> List Challenge</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="custom"> Custom List</label>
-                    <label class="radio"><input type="radio" name="difficulty" value="creator"> Creator</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=1&starred" id="easy"> Easy</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=2&starred" id="normal"> Normal</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=3&starred" id="hard"> Hard</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=4&starred" id="harder"> Harder</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=5&starred" id="insane"> Insane</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=1" id="easydemon"> Easy Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=2" id="mediumdemon"> Medium Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=3" id="harddemon"> Hard Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=4" id="insanedemon"> Insane Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2&demonFilter=5" id="extremedemon"> Extreme Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="?diff=-2" id="demon"> Any Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="demonlist" id="demonlist"> List Demon</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="challenge" id="challenge"> List Challenge</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="custom" id="custom"> Custom List</label>
+                    <label class="radio"><input type="radio" name="difficulty" value="creator" id="creator"> Creator</label>
                 </div>
 
                 <h3 class="title mb-1">Options</h3>
                 <div class="mb-3">
-                    <input class="input" type="number" name="" id="seed" placeholder="Seed (Leave blank for no seed)">
+                    <label for="link">Seed<input class="input" type="number" name="seed" id="seed" ></label>
+                    <label for="link">Copyable Link<input class="input" name="link" id="link" disabled value="Link"></label>
+                    <label for="checkbox">Make link start roulette immediately? <input type="checkbox" class="checkbox" id="linkStart"></label>
+                    <label for="checkbox">Add seed to link? <input type="checkbox" class="checkbox" id="addSeed"></label>
                 </div>
                 <br>
                 <div id="start" class="button is-success" onclick="startroulette()">Start</div>

@@ -12,13 +12,89 @@ let API = false;
 let pages = {}
 let apilist = []
 
+let urlQuery = ''
+
+const urlParams = new URLSearchParams(window.location.search);
+const radios = document.getElementsByName('difficulty');
+let checked = false;
+
+for (var i = 0, length = radios.length; i < length; i++) {
+    radios[i].addEventListener('change', e => {
+        let target = e.target || e.srcElement;
+        urlQuery = target.id;
+        updateURL()
+
+        document.getElementById('start').removeAttribute('disabled')
+        document.getElementById('start').setAttribute('onclick', 'startroulette()')
+    })
+    
+
+    if (urlParams.get(radios[i].id) !== null) {
+        radios[i].checked = true;
+        checked = true;
+        urlQuery = radios[i].id;
+    }
+}
+
+if (urlParams.get('seed') !== null) {
+    if (parseInt(urlParams.get('seed'))) {
+        document.querySelector('#seed').value = parseInt(urlParams.get('seed'));
+        Math.seed = document.querySelector('#seed').value;
+    }
+} else {
+    Math.seed = Math.floor(Math.random()*10000000000);
+    document.querySelector('#seed').value = Math.seed
+}
+
+if (checked && urlParams.get('start') !== null) {
+    document.getElementById('linkStart').checked = true;
+    document.getElementById('settings').classList.add('is-hidden')
+    startroulette()
+} 
+updateURL()
+
+if (!checked) {
+    document.getElementById('start').setAttribute('disabled', true)
+    document.getElementById('start').setAttribute('onclick', '')
+}
+
+
+
+document.querySelector('#seed').addEventListener('change', () => {
+    Math.seed = document.querySelector('#seed').value
+    updateURL()
+})
+
+document.getElementById('linkStart').addEventListener('change', () => {
+    updateURL();
+})
+
+document.getElementById('addSeed').addEventListener('change', () => {
+    updateURL();
+})
+
+function updateURL() {
+    urlAdds = []
+    if (urlQuery != undefined) urlAdds.push(urlQuery)
+    if (document.getElementById('addSeed').checked == true) urlAdds.push('seed='+Math.seed)
+    if (document.getElementById('linkStart').checked == true) urlAdds.push('start')
+
+    let string = ''
+    if (urlAdds[0] != "") {
+        urlAdds[0] = '?' +  urlAdds[0]
+        string +=  urlAdds.join('&')
+    }
+    document.getElementById('link').value = window.location.href.split('?')[0] + string
+    window.history.pushState("object or string", "GDRoulette", window.location.href.split('?')[0] + urlAdds.join('&'));
+
+}
+
+
 items = ["Hyperdash will come before 2.2", "2.2 when?", "Now with pointercrate!", "Now with Challenges!", "Automatically copying IDs since 2020", "Also try Geometry Dash", "Hi Matcool", "F in chat", "Hi YT", "🅱️", "This text is random", "GG EZ"]
 document.getElementById('splash').innerText = items[Math.floor(Math.random() * items.length)];
 
-Math.seed = Math.floor(Math.random()*10000000000);
 
 function startroulette() {
-    const radios = document.getElementsByName('difficulty');
     let query = '*';
 
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -80,10 +156,7 @@ function startroulette() {
             req.open("GET", listapi, false)
             req.send(null);
             apilist = JSON.parse(req.responseText)
-            
-            if (document.querySelector('#seed').value != '') {
-                Math.seed = document.querySelector('#seed').value;
-            }
+
             apilist.shuffle()
     
             apilist = apilist.slice(0,100)
@@ -106,9 +179,7 @@ function startroulette() {
             req.send(null);
             apilist = JSON.parse(req.responseText)
             
-            if (document.querySelector('#seed').value != '') {
-                Math.seed = document.querySelector('#seed').value;
-            }
+
             apilist.shuffle()
     
             apilist = apilist.slice(0,100)
@@ -138,9 +209,6 @@ function startroulette() {
                 list.push(i)
             }
 
-            if (document.querySelector('#seed').value != '') {
-                Math.seed = document.querySelector('#seed').value;
-            }
             list.shuffle()
 
             list = list.slice(0,100)
@@ -197,10 +265,6 @@ function startcustom() {
                 list.push(i)
             }
 
-            if (document.querySelector('#seed').value != '') {
-                Math.seed = document.querySelector('#seed').value;
-            }
-
             list.shuffle()
             getNextLvl()
 
@@ -221,10 +285,6 @@ function startcustom() {
         
         for (i = 0; i < list.length; i++) {
             list[i] = list[i].split(' ').join()
-        }
-
-        if (document.querySelector('#seed').value != '') {
-            Math.seed = document.querySelector('#seed').value;
         }
 
         list.shuffle()
