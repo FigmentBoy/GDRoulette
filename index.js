@@ -1,4 +1,6 @@
 const api = 'https://www.gdbrowser.com/api/search/'
+const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
+const challengeapi = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://gdchallengelist.com/api/v1/demons/?limit=100')
 let apiquery = ''
 let list = []
 let listnum = 0
@@ -6,8 +8,9 @@ let nextpercent = 1
 let diffstr = ""
 let custom = false
 let creator = false
-
+let API = false;
 let pages = {}
+let apilist = []
 
 Math.seed = Math.floor(Math.random()*10000000000);
 
@@ -66,6 +69,55 @@ function startroulette() {
                 
             </div>`)
         }, 250)
+    } else if (query=='*demonlist') {
+        document.getElementById('start').classList.add('is-loading')
+
+        setTimeout(() => {
+            req = new XMLHttpRequest();
+            req.open("GET", listapi, false)
+            req.send(null);
+            apilist = JSON.parse(req.responseText)
+            
+            if (document.querySelector('#seed').value != '') {
+                Math.seed = document.querySelector('#seed').value;
+            }
+            apilist.shuffle()
+    
+            apilist = apilist.slice(0,100)
+            getNextAPI();
+
+            document.getElementById('settings').classList.add('animate__fadeOut')
+            setTimeout(() => {
+                document.getElementById('settings').classList.add('is-hidden')
+                document.getElementById('settings').classList.remove('is-loading')
+            }, 250)
+        })
+    } else if (query=='*challenge') {
+        document.getElementById('start').classList.add('is-loading')
+
+        console.log("Challenge")
+
+        setTimeout(() => {
+            req = new XMLHttpRequest();
+            req.open("GET", challengeapi, false)
+            req.send(null);
+            apilist = JSON.parse(JSON.parse(req.responseText).contents)
+            
+            if (document.querySelector('#seed').value != '') {
+                Math.seed = document.querySelector('#seed').value;
+            }
+            apilist.shuffle()
+    
+            apilist = apilist.slice(0,100)
+            getNextAPI();
+
+            document.getElementById('settings').classList.add('animate__fadeOut')
+            setTimeout(() => {
+                document.getElementById('settings').classList.add('is-hidden')
+                document.getElementById('settings').classList.remove('is-loading')
+            }, 250)
+        })
+
     } else {
         document.getElementById('start').classList.add('is-loading')
 
@@ -270,6 +322,70 @@ function getNextLvl() {
     }
 }
 
+function getNextAPI() {
+
+    if (apilist.length == 0) {
+        return
+    }
+
+    
+    level = apilist.slice(0, 1)[0]
+    apilist = apilist.slice(1)
+    console.log(level)
+
+    
+    
+    if (level != undefined) { // If the servers goof up
+        listnum++;
+        if (level.video) {
+            let vidID = level.video.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
+            document.getElementById('levels').insertAdjacentHTML('beforeend', 
+            `<div class='box is-centered animate__animated columns animate__fadeInUpBig mt-1 is-1'>
+                    <div class="column is-narrow">
+                        <figure class="image">
+                            <a href="https://youtu.be/${vidID}" class="yt-thumb"><img src="https://i.ytimg.com/vi/${vidID}/mqdefault.jpg" class="yt-thumb"></a>
+                        </figure>
+                    </div>
+                    <div class="column box-content">
+                        <h1 class="title">#${level.position}: ${level.name}</h1>
+                        <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                    </div>
+                    <div class="is-narrow column" id="temp">
+                        <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
+                        <div class="columns is-mobile mt-1">
+                            <div class="column has-text-left">
+                                <div class="button is-success" onclick="completeAPI()" id="completion">Complete</div>
+                            </div>
+                            <div class="column has-text-right">
+                                <div class="button is-danger" onclick="finishAPI()">Give Up</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>`)
+        } else {
+            document.getElementById('levels').insertAdjacentHTML('beforeend', 
+            `<div class='box is-centered animate__animated columns animate__fadeInUpBig mt-1 is-1'>
+                    <div class="column box-content">
+                        <h1 class="title">#${level.position}: ${level.name}</h1>
+                        <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                    </div>
+                    <div class="is-narrow column" id="temp">
+                        <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
+                        <div class="columns is-mobile mt-1">
+                            <div class="column has-text-left">
+                                <div class="button is-success" onclick="completeAPI()" id="completion">Complete</div>
+                            </div>
+                            <div class="column has-text-right">
+                                <div class="button is-danger" onclick="finishAPI()">Give Up</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>`)
+        }
+        
+    }
+}
+
 function showFinalLevels() {
     let element = document.getElementById('show-remaining')
     element.removeAttribute('onclick')
@@ -305,6 +421,62 @@ function showFinalLevels() {
                 </div>`
             } else {
                 console.log(leveln)
+            }
+        }
+
+        document.getElementById('levels').insertAdjacentHTML('beforeend', str)
+        document.getElementById('rm').classList.add('is-hidden')
+    })
+}
+
+function showFinalLevelsAPI() {
+    let element = document.getElementById('show-remaining')
+    element.removeAttribute('onclick')
+    if (!creator) element.classList.add('is-loading')
+    
+    str = ''
+
+    setTimeout(() => { // Idk why but it doesn't set the loading thing correctly unless I do this.
+        for (level of apilist) {
+            
+            nextpercent++;
+            
+            if (nextpercent > 100) {
+                break
+            }
+            
+            if (level != undefined) { // If the servers goof up
+                listnum++;
+                if (level.video) {
+                    let vidID = level.video.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
+                    str += `<div class='box is-centered animate__animated columns animate__fadeInUpBig mt-1 is-1'>
+                                <div class="column is-narrow">
+                                    <figure class="image">
+                                        <a href="https://youtu.be/${vidID}" class="yt-thumb"><img src="https://i.ytimg.com/vi/${vidID}/mqdefault.jpg" class="yt-thumb"></a>
+                                    </figure>
+                                </div>
+                                <div class="column box-content">
+                                    <h1 class="title">#${level.position}: ${level.name}</h1>
+                                    <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                                </div>
+                                <div class="is-narrow column has-text-grey-light">
+                                    ${nextpercent}%
+                                </div>
+                            </div>`
+                } else {
+                    str += `<div class='box is-centered animate__animated columns animate__fadeInUpBig mt-1 is-1'>
+                                <div class="column box-content">
+                                    <h1 class="title">#${level.position}: ${level.name}</h1>
+                                    <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                                </div>
+                                <div class="is-narrow column has-text-grey-light">
+                                    ${nextpercent}%
+                                </div>
+                            </div>`
+                }
+                
+            } else {
+                console.log(level)
             }
         }
 
@@ -390,6 +562,35 @@ function complete() {
     
 }
 
+function completeAPI() {
+    setTimeout(() => {
+        percent = parseInt(document.getElementById('percent').value)
+        console.log(percent >= nextpercent && percent < 100 && apilist.length > 0)
+
+        if (percent < nextpercent || percent > 100) {
+            alert('Nice try lmao')
+        } else if (percent >= nextpercent && percent < 100 && apilist.length > 0) {
+            nextpercent = percent + 1
+
+            old = document.getElementById('temp')
+            old.id = ''
+            old.innerHTML = `${percent}%`
+
+            getNextAPI()
+        } else if (percent == 100 || apilist.length == 0) {
+            list.splice(0, 1)
+            nextpercent = percent + 1
+            listnum++;
+            old = document.getElementById('temp')
+            old.id = ''
+            old.innerHTML = `${percent}%`
+    
+            finishAPI()
+        } 
+    })
+    
+}
+
 function finish() {
     old = document.getElementById('temp')
     if (!diffstr.includes('Demon')) {
@@ -417,6 +618,35 @@ function finish() {
             </h1>
             <div class="content">
                 Number of levels: ${listnum - 1}/${listnum + list.length}<br>
+                Highest percent: ${nextpercent - 1}%
+                ${buttonorno}
+            </div>
+        </div>
+    </div>`)
+}
+
+function finishAPI() {
+    old = document.getElementById('temp')
+
+    diffstr = diffstr + 's'
+
+    let buttonorno = ''
+
+    if (nextpercent < 100 && apilist.length > 0) {
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsAPI()' id='show-remaining'>Show Remaining Levels</div></span>`
+    }
+
+    if (old) {
+        old.innerHTML = `Given up (${nextpercent}%)`
+    }
+    document.getElementById('levels').insertAdjacentHTML('beforeend', 
+    `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
+        <div class='column'>
+            <h1 class="title">
+                Results -${diffstr}
+            </h1>
+            <div class="content">
+                Number of levels: ${listnum - 1}/${listnum + apilist.length}<br>
                 Highest percent: ${nextpercent - 1}%
                 ${buttonorno}
             </div>
@@ -468,4 +698,3 @@ Object.defineProperty(Array.prototype, 'shuffle', {
         return this;
     }
 });
-
