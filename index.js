@@ -33,6 +33,8 @@ for (var i = 0, length = radios.length; i < length; i++) {
         radios[i].checked = true;
         checked = true;
         urlQuery = radios[i].id;
+        document.getElementById('start').removeAttribute('disabled')
+        document.getElementById('start').setAttribute('onclick', 'startroulette()')
     }
 }
 
