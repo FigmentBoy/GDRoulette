@@ -1,6 +1,6 @@
 const api = 'https://www.gdbrowser.com/api/search/'
 const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
-const challengeapi = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://gdchallengelist.com/api/v1/demons/?limit=100')
+const challengeapi = 'https://gdchallengelist.com/api/v1/demons/?limit=100'
 let apiquery = ''
 let list = []
 let listnum = 0
@@ -101,7 +101,7 @@ function startroulette() {
             req = new XMLHttpRequest();
             req.open("GET", challengeapi, false)
             req.send(null);
-            apilist = JSON.parse(JSON.parse(req.responseText).contents)
+            apilist = JSON.parse(req.responseText)
             
             if (document.querySelector('#seed').value != '') {
                 Math.seed = document.querySelector('#seed').value;
