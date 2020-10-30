@@ -18,6 +18,19 @@ const urlParams = new URLSearchParams(window.location.search);
 const radios = document.getElementsByName('difficulty');
 let checked = false;
 
+function copylink() {
+    copy(window.location.href)
+    document.getElementById('copytext').innerText = 'Copied!';
+    document.getElementById('copytext').classList.add('has-text-success');
+    document.getElementById('link').classList.add('is-success')
+
+    setTimeout(() => {
+        document.getElementById('copytext').innerText = 'Copyable Link (Click to copy)'
+        document.getElementById('copytext').classList.remove('has-text-success');
+        document.getElementById('link').classList.remove('is-success')
+    }, 1000)
+}
+
 for (var i = 0, length = radios.length; i < length; i++) {
     radios[i].addEventListener('change', e => {
         let target = e.target || e.srcElement;

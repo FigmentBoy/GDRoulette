@@ -77,7 +77,7 @@
                 <h3 class="title mb-1">Options</h3>
                 <div class="mb-3">
                     <label for="seed">Seed<input class="input" type="number" name="seed" id="seed" ></label>
-                    <label for="link">Copyable Link<input class="input" name="link" id="link" disabled value=""></label>
+                    <span onclick="copylink()" ><label for="link" id=""><span style='cursor:pointer;' id="copytext">Copyable Link (Click to copy)</span><input style='cursor:pointer;' class="input" name="link" id="link" value="" onclick='copylink()' disabled></label></span>
                     <label for="linkStart">Make link start roulette immediately? <input name="linkStart" type="checkbox" class="checkbox" id="linkStart"></label>
                     <label for="addSeed">Add seed to link? <input name="addSeed" type="checkbox" class="checkbox" id="addSeed"></label>
                 </div>
