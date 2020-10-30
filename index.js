@@ -351,7 +351,7 @@ function getNextAPI() {
                     </div>
                     <div class="column box-content">
                         <h1 class="title">#${level.position}: ${level.name}</h1>
-                        <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                        <h1 class="subtitle"><i>By ${level.publisher.name} (Verified by ${level.verifier.name})</i></h1>
                     </div>
                     <div class="is-narrow column" id="temp">
                         <input type="number" class="input" id="percent" placeholder="At least ${nextpercent}%">
@@ -460,7 +460,7 @@ function showFinalLevelsAPI() {
                                 </div>
                                 <div class="column box-content">
                                     <h1 class="title">#${level.position}: ${level.name}</h1>
-                                    <h1 class="subtitle"><i>By ${level.publisher.name} (${level.verifier.name})</i></h1>
+                                    <h1 class="subtitle"><i>By ${level.publisher.name} (Verified by ${level.verifier.name})</i></h1>
                                 </div>
                                 <div class="is-narrow column has-text-grey-light">
                                     ${nextpercent}%
