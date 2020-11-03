@@ -1,6 +1,9 @@
 const api = 'https://www.gdbrowser.com/api/search/'
 const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
 const challengeapi = 'https://gdchallengelist.com/api/v1/demons/?limit=100'
+const status = 'https://gdbrowser.com/api/search/*'
+
+
 let apiquery = ''
 let list = []
 let listnum = 0
@@ -90,6 +93,14 @@ document.getElementById('linkStart').addEventListener('change', () => {
 document.getElementById('addSeed').addEventListener('change', () => {
     updateURL();
 })
+
+req = new XMLHttpRequest();
+req.open("GET", status, false);
+req.send(null);
+
+if (req.responseText == '-1') {
+    document.getElementById('down').classList.add('is-active')
+} 
 
 function updateURL() {
     urlAdds = []
