@@ -773,6 +773,8 @@ async function getPage(page, iter=0) {
     return (pages[`page-${page}`])
 }
 
+
+// STACK OVERFLOW THINGS
 function timeout() {
     return new Promise(resolve => setTimeout(resolve, TIMEOUT));
 }
@@ -787,7 +789,6 @@ Math.seededRandom = function(max, min) {
     return min + rnd * (max - min);
 }
 
-// https://stackoverflow.com/a/6274381/9124836
 Object.defineProperty(Array.prototype, 'shuffle', {
     value: function () {
         for (let i = this.length - 1; i > 0; i--) {
