@@ -3,6 +3,7 @@ const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
 const challengeapi = 'https://gdchallengelist.com/api/v1/demons/?limit=100'
 const status = 'https://gdbrowser.com/api/search/*'
 
+const TIMEOUT = 2000;
 
 let apiquery = ''
 let list = []
@@ -94,13 +95,14 @@ document.getElementById('addSeed').addEventListener('change', () => {
     updateURL();
 })
 
-req = new XMLHttpRequest();
-req.open("GET", status, false);
-req.send(null);
-
-if (req.responseText == '-1') {
-    document.getElementById('down').classList.add('is-active')
-} 
+async function checkStatus() {
+    req = await axios.get(status)
+    console.log(req)
+    if (req.data == '-1') {
+        document.getElementById('down').innerText = 'Hey! You (or GDBrowser) have been ratelimited. Please wait a bit before restarting'
+    } 
+}
+setTimeout(checkStatus)
 
 function updateURL() {
     urlAdds = []
@@ -123,7 +125,7 @@ items = ["Hyperdash will come before 2.2", "2.2 when?", "Now with pointercrate!"
 document.getElementById('splash').innerText = items[Math.floor(Math.random() * items.length)];
 
 
-function startroulette() {
+async function startroulette() {
     let query = '*';
 
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -180,11 +182,9 @@ function startroulette() {
     } else if (query=='*demonlist') {
         document.getElementById('start').classList.add('is-loading')
 
-        setTimeout(() => {
-            req = new XMLHttpRequest();
-            req.open("GET", listapi, false)
-            req.send(null);
-            apilist = JSON.parse(req.responseText)
+        setTimeout(async () => {
+            req = await axios.get(listapi)
+            apilist = req.data
 
             apilist.shuffle()
     
@@ -202,11 +202,9 @@ function startroulette() {
 
         console.log("Challenge")
 
-        setTimeout(() => {
-            req = new XMLHttpRequest();
-            req.open("GET", challengeapi, false)
-            req.send(null);
-            apilist = JSON.parse(req.responseText)
+        setTimeout(async () => {
+            req = await axios.get(challengeapi)
+            apilist = req.data
             
 
             apilist.shuffle()
@@ -224,13 +222,11 @@ function startroulette() {
     } else {
         document.getElementById('start').classList.add('is-loading')
 
-        setTimeout(() => { // Because js is weird
+        setTimeout(async () => { // Because js is weird
             apiquery = api + query;
 
-            req = getPage(0)
+            req = await getPage(0)
             
-            
-
             levels = req[0]["results"]
 
 
@@ -253,18 +249,16 @@ function startroulette() {
     }
 }
 
-function startcustom() {
+async function startcustom() {
 
     if (creator) {
         creatortxt = document.getElementById('customs').value
         document.getElementById('startcustom').classList.add('is-loading')
 
-        setTimeout(() => { // Because js is weird
-            req = new XMLHttpRequest();
-            req.open("GET", 'https://www.gdbrowser.com/api/profile/' + creatortxt, false);
-            req.send(null);
+        setTimeout(async () => { // Because js is weird
+            req = axios.get('https://www.gdbrowser.com/api/profile/' + creatortxt)
 
-            creatortxt = JSON.parse(req.responseText)['accountID']
+            creatortxt = req.data['accountID']
 
             if (!creatortxt) {
                 alert('Creator does not exist')
@@ -278,7 +272,7 @@ function startcustom() {
             amount = 10
             page = 0
             while (amount == 10) {
-                req = getPage(page)
+                req = await getPage(page)
                 console.log(req)
 
                 
@@ -333,18 +327,16 @@ function startcustom() {
 
 }
 
-function getNextLvlCustom() {
+async function getNextLvlCustom() {
     
 
     leveln = list.slice(0, 1)[0]
     console.log(leveln)
     list = list.slice(1)
-
-    req = new XMLHttpRequest();
-    req.open("GET", 'https://www.gdbrowser.com/api/level/' + leveln, false);
-    req.send(null);
+    await timeout()
+    req = axios.get('https://www.gdbrowser.com/api/level/' + leveln)
     
-    level = JSON.parse(req.responseText)
+    level = req.data
     console.log(level)
     
     if (level != undefined) { // If the servers goof up
@@ -373,7 +365,7 @@ function getNextLvlCustom() {
     }
 }
 
-function getNextLvl() {
+async function getNextLvl() {
     if (list.length == 0) {
         return
     }
@@ -383,7 +375,7 @@ function getNextLvl() {
 
     page = Math.floor((leveln-1)/10)
 
-    req = getPage(page)
+    req = await getPage(page)
     
     level = req[(leveln-1)%10]
     console.log(level)
@@ -478,14 +470,14 @@ function getNextAPI() {
     }
 }
 
-function showFinalLevels() {
+async function showFinalLevels() {
     let element = document.getElementById('show-remaining')
     element.removeAttribute('onclick')
     if (!creator) element.classList.add('is-loading')
     
     str = ''
 
-    setTimeout(() => { // Idk why but it doesn't set the loading thing correctly unless I do this.
+    setTimeout(async () => { // Idk why but it doesn't set the loading thing correctly unless I do this.
         for (leveln of list) {
             
             nextpercent++;
@@ -495,10 +487,11 @@ function showFinalLevels() {
             }
     
             page = Math.floor((leveln-1)/10)
+            
+            page = await getPage(page)
     
-            page = getPage(page)
-    
-            level = page[(leveln-1)%10]
+            level = page ? page[(leveln-1)%10] : undefined
+
             
             if (level != undefined) { // If the servers goof up
                 listnum++;
@@ -577,7 +570,7 @@ function showFinalLevelsAPI() {
     })
 }
 
-function showFinalLevelsCustom() {
+async function showFinalLevelsCustom() {
     let element = document.getElementById('show-remaining')
     element.removeAttribute('onclick')
     if (!creator) element.classList.add('is-loading')
@@ -585,7 +578,7 @@ function showFinalLevelsCustom() {
     str = ''
     pages = {}
 
-    setTimeout(() => { // Idk why but it doesn't set the loading thing correctly unless I do this.
+    setTimeout(async () => { // Idk why but it doesn't set the loading thing correctly unless I do this.
         for (leveln of list) {
             
             nextpercent++;
@@ -594,11 +587,10 @@ function showFinalLevelsCustom() {
                 break
             }
     
-            req = new XMLHttpRequest();
-            req.open("GET", 'https://www.gdbrowser.com/api/level/' + leveln, false);
-            req.send(null);
+            await timeout()
+            req = await axios.get('https://www.gdbrowser.com/api/level/' + leveln)
             
-            level = JSON.parse(req.responseText)
+            level = req.data
 
             if (level != undefined) { // If the servers goof up
                 listnum++;
@@ -694,9 +686,9 @@ function finish() {
     let buttonorno = ''
 
     if (nextpercent < 100 && list.length > 0 && custom) {
-        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsCustom()' id='show-remaining'>Show Remaining Levels</div></span>`
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevelsCustom()' id='show-remaining'>Show Remaining Levels (This will take a minute)</div></span>`
     } else if (nextpercent < 100 && list.length > 0) {
-        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels</div></span>`
+        buttonorno = `<span id='rm'><br><br><div class='button is-danger' onclick='showFinalLevels()' id='show-remaining'>Show Remaining Levels (This will take a minute)</div></span>`
     }
 
     if (old) {
@@ -754,20 +746,35 @@ function copy(string) {
     document.execCommand("copy");
 }
 
-function getPage(page) {
+async function getPage(page, iter=0) {
+    
 
     if (!pages.hasOwnProperty(`page-${page}`)) {
-        req = new XMLHttpRequest();
-        req.open("GET", apiquery + '&page=' + page, false);
-        req.send(null);
+        await timeout()
 
-        pages[`page-${page}`] = JSON.parse(req.responseText)
+        res = await axios.get(apiquery + '&page=' + page);
+        console.log(res.data)
+        pages[`page-${page}`] = res.data
         if (pages[`page-${page}`] == -1) {
-            pages[`page-${page}`] = [];
+            if (iter < 5) {
+                page = await axios.get(apiquery + '&page=' + page, iter+1)
+                return page
+            } else {
+                document.getElementById('down').innerHTML = 'Hey! GDBrowser is down which means you won\'t be able to use difficulties. You can still use list demons and challenges though!'
+                document.getElementById('down').classList.add('is-active')
+                throw new Error("Something went badly wrong!");
+            }
+            
         }
+
+        
     }
 
     return (pages[`page-${page}`])
+}
+
+function timeout() {
+    return new Promise(resolve => setTimeout(resolve, TIMEOUT));
 }
 
 Math.seededRandom = function(max, min) {

@@ -37,13 +37,13 @@
         </div>
     </div>
     
-    <div id="down" class="modal animate__animated animate__fadeIn" style="--animate-duration: 0.25s">
+    <div id="down" class="modal is-active" style="--animate-duration: 0.25s">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
                 <div class="media">
                     <div class="media-content">
-                        Hey! GDBrowser is down which means you won't be able to use difficulties. You can still use list demons and challenges though! Since a thread by <a href='https://twitter.com/TheRealGDColon/status/1326985061275676685'>Colon</a> says GDBrowser may be down for a while, I am working on making the system not rely on it!
+                        The site is a bit slower than usual now because I have to abide by some strict ratelimits Rob put in place. Everything should be normal but expect showing remaining levels to take a LOT longer until everything is sorted out
                     </div>
                     <div class="media-right has-text-right"><div id="btn-close-help" class="button is-danger" onclick="document.getElementById('down').classList.remove('is-active')">X</div></div>
                 </div>
@@ -105,6 +105,7 @@
     <div id="levels" class="container is-centered">
         
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
