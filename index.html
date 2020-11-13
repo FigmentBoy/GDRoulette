@@ -37,13 +37,13 @@
         </div>
     </div>
     
-    <div id="down" class="modal is-active" style="--animate-duration: 0.25s">
+    <div id="down" class="modal" style="--animate-duration: 0.25s">
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
                 <div class="media">
-                    <div class="media-content">
-                        The site is a bit slower than usual now because I have to abide by some strict ratelimits Rob put in place. Everything should be normal but expect showing remaining levels to take a LOT longer until everything is sorted out
+                    <div id='down-content' class="media-content">
+                        Hey! Either one of two things have happened. Either you've used the GD servers too much in the last minute, leading you to get ratelimited, or <a href='https://www.gdbrowser.com'>GDBrowser</a> has been IP banned again. Please wait a minute then refresh.
                     </div>
                     <div class="media-right has-text-right"><div id="btn-close-help" class="button is-danger" onclick="document.getElementById('down').classList.remove('is-active')">X</div></div>
                 </div>
@@ -92,8 +92,8 @@
                 <div class="mb-3">
                     <label for="seed">Seed<input class="input" type="number" name="seed" id="seed" ></label>
                     <span onclick="copylink()" ><label for="link" id=""><span style='cursor:pointer;' id="copytext">Copyable Link (Click to copy)</span><input style='cursor:pointer;' class="input" name="link" id="link" value="" onclick='copylink()' disabled></label></span>
-                    <label for="linkStart">Make link start roulette immediately? <input name="linkStart" type="checkbox" class="checkbox" id="linkStart"></label>
-                    <label for="addSeed">Add seed to link? <input name="addSeed" type="checkbox" class="checkbox" id="addSeed"></label>
+                    <label for="linkStart"><input name="linkStart" type="checkbox" class="checkbox" id="linkStart"> Make link start roulette immediately?</label>
+                    <br><label for="addSeed"><input name="addSeed" type="checkbox" class="checkbox" id="addSeed"> Add seed to link? (Useful for competitions or to not lose progress if ratelimited or IP banned)</label>
                 </div>
                 <br>
                 <div id="start" class="button is-success" disabled>Start</div>
