@@ -3,7 +3,7 @@ const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
 const challengeapi = 'https://gdchallengelist.com/api/v1/demons/?limit=100'
 const status = 'https://gdbrowser.com/api/search/*'
 
-const TIMEOUT = 2000;
+const TIMEOUT = 2500;
 
 let apiquery = ''
 let list = []
