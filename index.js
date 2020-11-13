@@ -99,7 +99,7 @@ async function checkStatus() {
     req = await axios.get(status)
     console.log(req)
     if (req.data == '-1') {
-        document.getElementById('down').innerText = 'Hey! You (or GDBrowser) have been ratelimited. Please wait a bit before restarting'
+        document.getElementById('down').innerText = 'Hey! You (or GDBrowser) have been ratelimited. Please wait a bit before refreshing'
     } 
 }
 setTimeout(checkStatus)
@@ -760,7 +760,7 @@ async function getPage(page, iter=0) {
                 page = await axios.get(apiquery + '&page=' + page, iter+1)
                 return page
             } else {
-                document.getElementById('down').innerHTML = 'Hey! GDBrowser is down which means you won\'t be able to use difficulties. You can still use list demons and challenges though!'
+                document.getElementById('down').innerHTML = 'Either you or GDBrowser just got ratelimited. Try refreshing? FeelsBadMan'
                 document.getElementById('down').classList.add('is-active')
                 throw new Error("Something went badly wrong!");
             }
