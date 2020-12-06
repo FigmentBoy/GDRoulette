@@ -176,7 +176,7 @@ async function startroulette() {
                 <div class="column box-content">
                     <input id='customs' class='input' placeholder="Enter the creator's name"></input>
                     <br><br>
-                    <div id="startcustom" class="button is-success" onclick="startcustom()">Start</div>
+                    <div id="startcustom" class="button is-success" onclick="startcustom()">Start (May take a few minutes)</div>
                 </div>
                 
             </div>`)
@@ -258,7 +258,7 @@ async function startcustom() {
         document.getElementById('startcustom').classList.add('is-loading')
 
         setTimeout(async () => { // Because js is weird
-            req = axios.get('https://www.gdbrowser.com/api/profile/' + creatortxt)
+            req = await axios.get('https://www.gdbrowser.com/api/profile/' + creatortxt)
 
             creatortxt = req.data['accountID']
 
@@ -275,8 +275,8 @@ async function startcustom() {
             page = 0
             while (amount == 10) {
                 req = await getPage(page)
+                
                 console.log(req)
-
                 
                 amount = req.length
                 
@@ -336,7 +336,7 @@ async function getNextLvlCustom() {
     console.log(leveln)
     list = list.slice(1)
     await timeout()
-    req = axios.get('https://www.gdbrowser.com/api/level/' + leveln)
+    req = await axios.get('https://www.gdbrowser.com/api/level/' + leveln)
     
     level = req.data
     console.log(level)
@@ -696,6 +696,11 @@ function finish() {
     if (old) {
         old.innerHTML = `Given up (${nextpercent}%)`
     }
+
+    if (list.length == 0) {
+        listnum -= 1
+    }
+
     document.getElementById('levels').insertAdjacentHTML('beforeend', 
     `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
         <div class='column'>
@@ -725,6 +730,11 @@ function finishAPI() {
     if (old) {
         old.innerHTML = `Given up (${nextpercent}%)`
     }
+
+    if (list.length == 0) {
+        listnum -= 1
+    }
+
     document.getElementById('levels').insertAdjacentHTML('beforeend', 
     `<div class='box columns is-centered has-text-centered has-text-vcentered animate__animated animate__fadeInUpBig mt-1 mb-3'>
         <div class='column'>
