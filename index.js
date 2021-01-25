@@ -1,4 +1,4 @@
-const api = 'https://www.gdbrowser.com/api/search/'
+const api = 'https://gdbrowser.com/api/search/'
 const listapi = 'https://pointercrate.com/api/v1/demons/?limit=100'
 const challengeapi = 'https://gdchallengelist.com/api/v1/demons/?limit=100'
 const status = 'https://gdbrowser.com/api/search/*'
